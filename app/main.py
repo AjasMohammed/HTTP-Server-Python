@@ -17,6 +17,10 @@ def main():
             data = bytes_data.decode().split('\r\n')
             path = data[0].split()[1]
             print('Path: ', path)
+            if path == '/':
+                return response
+            else:
+                response = b'HTTP/1.1 404 Not Found\r\n\r\n'
             client_socket.sendall(response)
         
 
