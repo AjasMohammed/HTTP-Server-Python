@@ -16,12 +16,16 @@ def main():
         if bytes_data:
             data = bytes_data.decode().split('\r\n')
             path = data[0].split()[1]
-            print('Path: ', path)
+            print('Data: ', data)
             if path == '/':
                 pass
             elif path.startswith('/echo/'):
                 content = path.replace('/echo/', '')
                 response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(content)}\r\n\r\n{content}".encode()
+            elif path.startswith('/user-agent'):
+                content = data[2].split(':')[1].strip()
+                response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(content)}\r\n\r\n{content}".encode()
+                
             else:
                 response = b'HTTP/1.1 404 Not Found\r\n\r\n'
         client_socket.send(response)
