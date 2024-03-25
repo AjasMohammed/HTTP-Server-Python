@@ -12,8 +12,11 @@ def main():
         client_socket, client_address = server_socket.accept()
         print(f"Connection from {client_address} has been established.")
 
-        data = client_socket.recv(1024)
-        if data:
+        bytes_data = client_socket.recv(1024)
+        if bytes_data:
+            data = bytes_data.decode().split('\r\n')
+            path = data[0].split()[1]
+            print('Path: ', path)
             client_socket.sendall(response)
         
 
