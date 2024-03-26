@@ -7,8 +7,10 @@ def create_response(status_code, content_length, content, content_type="text/pla
 
 
 def check_file(directory, path):
-    print("Directory: ", directory, " Path: ", path)
+    print('Current Directory: ', os.getcwd())
+    print("Directory: ", directory)
     path = os.path.join(directory, path)
+    print("Path: ", path)
     return os.path.exists(path)
 
 
@@ -32,8 +34,9 @@ def handle_request(client_socket, directory):
             elif path.startswith("/files/"):
                 filename = path.replace("/files/", "")
                 if check_file(directory, filename):
-                    with open(os.path.join(directory, filename), "rb") as file:
+                    with open(os.path.join(directory, filename), "r") as file:
                         content = file.read()
+                        print("Content: ", content)
                         response = create_response("200 OK", len(content), content, content_type='application/octet-stream')
                 else:
                     response = not_found_status
