@@ -5,19 +5,19 @@ import threading
 def make_request():
     response = requests.get("http://127.0.0.1:4221/")
 
-    # Print request details
-    print("Request URL:", response.request.url)
-    print("Request Headers:", response.request.headers)
-    print("Request Method:", response.request.method)
+    # # Print request details
+    # print("Request URL:", response.request.url)
+    # print("Request Headers:", response.request.headers)
+    # print("Request Method:", response.request.method)
 
-    # Print response details
-    print("\nResponse Status Code:", response.status_code)
-    print("Response Headers:", response.headers)
-    print("Response Content Type:", response.headers["Content-Type"])
+    # # Print response details
+    # print("\nResponse Status Code:", response.status_code)
+    # print("Response Headers:", response.headers)
+    # print("Response Content Type:", response.headers["Content-Type"])
 
-    # Print response content
-    print("\nResponse Content:")
-    print(response.content)
+    # # Print response content
+    # print("\nResponse Content:")
+    # print(response.content)
 
     print('-'*50)
 
