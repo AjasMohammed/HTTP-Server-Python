@@ -10,7 +10,7 @@ def main():
     print("Logs from your program will appear here!")
     host = "127.0.0.1"
     port = 4221
-    # response = b"HTTP/1.1 200 OK\r\n\r\n"
+    response = b"HTTP/1.1 200 OK\r\n\r\n"
 
     with socket.create_server((host, port)) as server_socket:
         while True:
