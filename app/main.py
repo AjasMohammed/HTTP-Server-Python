@@ -13,6 +13,10 @@ def check_file(directory, path):
     print("Path: ", path)
     return os.path.exists(path)
 
+def create_file(directory, path, content):
+    path = os.path.join(directory, path)
+    with open(path, "w") as file:
+        file.write(content)
 
 def handle_request(client_socket, directory):
     response = b"HTTP/1.1 200 OK\r\n\r\n"
@@ -21,25 +25,38 @@ def handle_request(client_socket, directory):
         bytes_data = client_socket.recv(1024)
         if bytes_data:
             data = bytes_data.decode().split("\r\n")
-            path = data[0].split()[1]
+            request_info = data[0].split()
+            method = request_info[0]
+            path = request_info[1]
             print("Data: ", data)
-            if path == "/":
-                pass
-            elif path.startswith("/echo/"):
-                content = path.replace("/echo/", "")
-                response = create_response("200 OK", len(content), content)
-            elif path.startswith("/user-agent"):
-                content = data[2].split(":")[1].strip()
-                response = create_response("200 OK", len(content), content)
-            elif path.startswith("/files/"):
-                filename = path.replace("/files/", "")
-                if check_file(directory, filename):
-                    with open(os.path.join(directory, filename), "r") as file:
-                        content = file.read()
-                        print("Content: ", content)
-                        response = create_response("200 OK", len(content), content, content_type='application/octet-stream')
+            if method == "GET":
+                if path == "/":
+                    pass
+                elif path.startswith("/echo/"):
+                    content = path.replace("/echo/", "")
+                    response = create_response("200 OK", len(content), content)
+                elif path.startswith("/user-agent"):
+                    content = data[2].split(":")[1].strip()
+                    response = create_response("200 OK", len(content), content)
+                elif path.startswith("/files/"):
+                    filename = path.replace("/files/", "")
+                    if check_file(directory, filename):
+                        with open(os.path.join(directory, filename), "r") as file:
+                            content = file.read()
+                            print("Content: ", content)
+                            response = create_response("200 OK", len(content), content, content_type='application/octet-stream')
+                    else:
+                        response = not_found_status
                 else:
                     response = not_found_status
+            elif method == "POST":
+                print("POST request")
+                if path.startswith('/files/'):
+                    filename = path.replace("/files/", "")
+                    content = data[-1]
+                    create_file(directory, filename, content)
+                    response = b'HTTP/1.1 201 CREATED\r\n\r\n'
+                    
             else:
                 response = not_found_status
         client_socket.send(response)
